@@ -1,58 +1,81 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+```md
+# 🚀 Project Overview
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This project was developed during an internship at **Mediaprisma** as part of a practical learning experience focused on modern web development.
 
-## About Laravel
+The application was built using a full-stack approach with **Laravel** and **Bootstrap 5**, combining backend architecture, responsive UI development, and external API integration.  
+Its main objective is to provide a structured and functional environment for managing and displaying data retrieved from the **Trello API**.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+# 🛠️ Tech Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Backend
+- **Laravel**
+  - Routing and controllers
+  - Application architecture
+  - Database management
+  - Business logic implementation
+  - API communication
 
-## Learning Laravel
+## Frontend
+- **Bootstrap 5**
+  - Responsive layout system
+  - Modern UI components
+  - Utility-based styling
+  - Mobile-friendly interface
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## External Services
+- **Trello API**
+  - Data retrieval and synchronization
+  - Board and task management integration
+  - Dynamic external content handling
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+# ✨ Features
 
-## Agentic Development
+- Trello API integration for project data management
+- Responsive and modern interface built with Bootstrap 5
+- Structured Laravel backend architecture
+- Dark mode user interface
+- Dynamic content rendering
+- Clean and organized project structure
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+---
 
-```bash
-composer require laravel/boost --dev
+# 🎯 Project Goals
 
-php artisan boost:install
+The purpose of this project was to strengthen practical skills in:
+
+- Full-stack web development
+- Laravel application architecture
+- REST API integration
+- Responsive UI development
+- Modern frontend workflows
+- Real-world project organization
+
+---
+
+# 🏢 About Mediaprisma
+
+Developed during an internship at **Mediaprisma**, a creative digital agency specialized in communication, design, and digital solutions.
+
+The internship focused on gaining hands-on experience in modern web technologies, software structure, and professional development workflows.
+
+---
+
+# 📌 Status
+✅ → Done
+⌛ → In Progress
+
+## Features
+✅ Login
+✅ Register
+⌛ Trello API
+
+## TUDO:
+- Form Password Field aye
+- Home Page
+- Admin Page
 ```
-
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
