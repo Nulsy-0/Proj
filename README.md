@@ -72,10 +72,16 @@ The internship focused on gaining hands-on experience in modern web technologies
 ## Features
 ✅ Login
 ✅ Register
+✅ Admin Page
+✅ User CRUD
+✅ Board CRUD
+✅ List CRUD
+✅ Form Password Field eye
 ⌛ Trello API
 
 ## TUDO:
-- Form Password Field aye
+- Better tables with bootstrap-table
 - Home Page
-- Admin Page
+- List Page
+
 ```

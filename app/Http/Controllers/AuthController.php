@@ -9,16 +9,17 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function login(User $user, AuthRequest $request)
+    public function login(AuthRequest $request)
     {
         $user = $request->safe()->all();
 
-        if (! Auth::attempt($user)) {
+        if (!Auth::attempt($user) || Auth::user()->state == "disabled") {
+            Auth::logout();    
+
             return back()
                 ->withErrors([
                     'password' => "The credencials aren't rigth!",
-                ])
-                ->withInput();
+                ])->withInput(request()->all());
         }
 
         $request->session()->regenerate();
@@ -51,19 +52,18 @@ class AuthController extends Controller
 
         $request->safe()->all();
 
-        $tmp = [
-            'type' => $request->type,
-            'boards' => []
-        ];
-
         $user = User::create([
             'name' => $request->name,
             'password' => $request->password,
-            'settings' => $tmp
+            'state' => $request->state,
+            'boards' => [],
         ]);
 
-        Auth::login($user);
-
-        return redirect()->intended('/')->with('success', 'The first time :)');
+        if(!Auth::user() || Auth::user()->settings->type == "disabled") {
+            Auth::login($user);
+            return redirect()->intended('/')->with('success', 'The first time :)');
+        }
+    
+        return to_route('admin.index')->with('success','User created!');
     }
 }

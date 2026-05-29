@@ -9,8 +9,9 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 
-#[Fillable(['name', 'password', 'settings'])]
+#[Fillable(['name', 'password', 'state', 'boards'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -28,7 +29,17 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'settings' => 'object',
+            'boards' => 'array',
         ];
+    }
+
+    public function boards()
+    {
+        return Board::whereIn('id', $this->boards, 'and', false)->get();
+    }
+
+    public function lists()
+    {
+        return ListModel::whereIn('board_id', $this->boards, 'and', false)->where('state', 'active')->get();
     }
 }

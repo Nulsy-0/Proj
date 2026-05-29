@@ -1,4 +1,5 @@
 import 'bootstrap/dist/js/bootstrap.js';
+import 'bootstrap-table/dist/bootstrap-table.min.js';
 
 // Obter o modo de preferencia a aplicalo ("dark" ou "ligth")
 function getCookie(name) {
@@ -16,16 +17,16 @@ if (!theme) {
     document.cookie = `theme=${theme};`;
 }
 
+
 // Botões para modar de modo
 const themeBtns = document.querySelectorAll('.themeBtn');
 const body = document.querySelector('body');
 themeBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-        console.log(btn.id);
         body.setAttribute(
             'data-bs-theme',
             btn.id
         );
         document.cookie = `theme=${btn.id};`;
     });
-}); 
+});

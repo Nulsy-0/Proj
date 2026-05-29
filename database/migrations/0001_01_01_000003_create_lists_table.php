@@ -11,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('boards', function (Blueprint $table) {
+        Schema::create('lists', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->foreignId('board_id')->constrained()->cascadeOnDelete();
+            $table->string('name');
             $table->string('trello_id')->unique();
-            $table->string('link')->unique();
+            $table->date('start_date');
+            $table->json('days');
+            $table->string('state')->default('disabled');
             $table->timestamps();
         });
     }
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('boards');
+        Schema::dropIfExists('lists');
     }
 };

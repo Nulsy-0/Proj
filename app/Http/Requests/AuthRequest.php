@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
 use function Laravel\Prompts\error;
 
 class AuthRequest extends FormRequest
@@ -35,14 +37,18 @@ class AuthRequest extends FormRequest
                 'name' => ['required', 'string', 'max:255', 'unique:users,name'],
                 'password' => ['required', 'string', 'min:8', 'max:255'],
                 'password_confirmation'=> ['required', 'string', 'min:8', 'max:255', 'same:password'],
-                'type' => ['required', 'string', 'in:"user","admin","disabled"']
-                // 'settings' => ['required', 'nullable', 'array'],
-                // 'settings.type' => ['required_with:settings', 'string', 'in:user,admin,disabled'],
-                // 'settings.boards' => ['array'],
-                // 'settings.boards.*' => ['integer', 'exists:boards,id'],
+                'state' => ['required', 'string', 'in:"user","admin","disabled"']
             ];
         }
 
-        return [];
+        if ($this->routeIs('user.update')) {
+            return [
+                'name' => ['required', 'string', 'max:255', Rule::unique('users', 'name')->ignore($this->id)],
+                'password_reset' => ['nullable', 'string', 'min:8', 'max:255'],
+                'state' => ['required', 'string', 'in:"user","admin","disabled"'],
+            ];
+        }
+
+        return [error('Not the rigth route!')];
     }
 }
