@@ -75,8 +75,8 @@ The internship focused on gaining hands-on experience in modern web technologies
 ✅ Admin Page
 ✅ User CRUD
 ✅ Board CRUD
-✅ List CRUD
 ✅ Form Password Field eye
+⌛ List CRUD
 ⌛ Trello API
 
 ## TUDO:
