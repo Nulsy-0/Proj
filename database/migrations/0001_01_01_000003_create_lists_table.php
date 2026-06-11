@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('board_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->string('trello_id')->unique();
-            $table->date('start_date');
+            $table->date('start_date')->nullable();
             $table->json('days');
             $table->string('state')->default('disabled');
             $table->timestamps();

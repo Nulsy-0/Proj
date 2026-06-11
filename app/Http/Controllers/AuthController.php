@@ -50,8 +50,6 @@ class AuthController extends Controller
     {
         $request->session()->regenerate();
 
-        $request->safe()->all();
-
         $user = User::create([
             'name' => $request->name,
             'password' => $request->password,

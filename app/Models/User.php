@@ -35,11 +35,11 @@ class User extends Authenticatable
 
     public function boards()
     {
-        return Board::whereIn('id', $this->boards, 'and', false)->get();
+        return Board::whereIn('id', $this->boards, 'and', false)->orderBy('name', 'asc')->get();
     }
 
     public function lists()
     {
-        return ListModel::whereIn('board_id', $this->boards, 'and', false)->where('state', 'active')->get();
+        return ListModel::whereIn('board_id', $this->boards, 'and', false)->where('state', 'active')->orderBy('name', 'asc')->get();
     }
 }

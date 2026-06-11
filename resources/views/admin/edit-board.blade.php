@@ -1,7 +1,4 @@
-@props([
-    'board',
-    'weeks'
-])
+@props(['board', 'weeks'])
 
 <x-layout>
     <div class="row align-items-center">
@@ -26,10 +23,41 @@
                         {{ $board->created_at->diffForHumans() }}
                     </span>
                 </p>
-                <x-form id="board-delete" method="DELETE" :action="route('board.delete', ['id' => $board->id])">
-                    <input name="id" type="number" value="{{ $board->id }}" hidden readonly>
-                    <button class="btn btn-danger">Delete <i class="bi bi-trash3-fill"></i></button>
-                </x-form>
+
+                <button data-bs-toggle="modal" data-bs-target="#delete-board" class="btn btn-danger">
+                    Delete
+                    <i class="bi bi-trash3-fill"></i>
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="delete-board" data-bs-backdrop="static" data-bs-keyboard="false"
+                    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Delete Board</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-start">
+                                <p>
+                                    By pressing "Delete" this Board ({{ $board->name }}) will no longer exists!
+                                    <b>Are o shore that you want to delete it?</b>
+                                </p>
+                            </div>
+                            <div class="modal-footer d-flex justify-content-between">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                                <x-form id="board-delete" method="DELETE" :action="route('board.delete', ['id' => $board->id])">
+                                    <input name="id" type="number" value="{{ $board->id }}" hidden readonly>
+                                    <button data-bs-toggle="modal" data-bs-target="delete-board"
+                                        class="btn btn-danger">Delete <i class="bi bi-trash3-fill"></i></button>
+                                </x-form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -79,23 +107,29 @@
                             @if ($list->state == 'active')
                                 <div class="collapse mt-2" id="collapse-{{ $list->id }}"
                                     data-bs-parent="#listsAccordion">
-                                    <div class="p-3 pt-2 pb-1 border rounded-3 @error('days') is-invalid @enderror">
+                                    <div class="p-3 pt-2 pb-1 border rounded-3">
                                         <p class="pb-2 border-bottom ">{{ $list->name }}</p>
 
-                                        <x-form.field label="Start date" id="days[{{ $list->id }}][start_date]"
+                                        <x-form.field label="Start date" id="weeks[{{ $list->id }}][start_date]"
                                             type="date" :value="$list->start_date" />
 
-                                        <div class="border rounded-3 p-2 mb-2 form-control">
-                                            <p class="ms-2 mb-2 text-muted small">Week days</p>
+                                        <div
+                                            class="border rounded-3 p-2 mb-2 @error('weeks') border-danger-subtle @enderror form-control">
+                                            <div class="d-flex justify-content-between">
+                                                <p class="ms-2 mb-2 text-muted small">Week days</p>
+                                                @error('weeks')
+                                                    <i class="bi bi-exclamation-circle text-danger"></i>
+                                                @enderror
+                                            </div>
                                             <div class="d-flex flex-wrap justify-content-center gap-2">
                                                 @foreach ($weeks as $week)
                                                     <input type="checkbox" class="btn-check"
-                                                        id="days-{{ $list->name . $week }}"
-                                                        name="days[{{ $list->id }}][weeks][]"
+                                                        id="{{ $list->name . $week }}"
+                                                        name="weeks[{{ $list->id }}][days][]"
                                                         value="{{ $week }}" autocomplete="off"
                                                         @checked(in_array($week, $list->days ?? []))>
                                                     <label class="btn btn-outline-secondary px-4 py-2"
-                                                        for="days-{{ $list->name . $week }}">{{ $week }}</label>
+                                                        for="{{ $list->name . $week }}">{{ $week }}</label>
                                                 @endforeach
                                             </div>
                                         </div>
@@ -107,8 +141,6 @@
                 </div>
 
             </div>
-
-            <x-debug.errors />
         </div>
     </x-form>
 </x-layout>

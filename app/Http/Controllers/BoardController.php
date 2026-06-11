@@ -8,7 +8,6 @@ use App\Models\API;
 use App\Models\Board;
 use App\Models\ListModel;
 use App\Models\Utilities;
-use DateTime;
 use Illuminate\Http\Request;
 
 class BoardController extends Controller
@@ -16,8 +15,6 @@ class BoardController extends Controller
 
     public function create(BoardRequest $request)
     {
-        $request->safe()->all();
-
         $trelloId = API::getBoardId($request->link);
         $boardName = API::getBoard($trelloId)->name;
 
@@ -33,7 +30,7 @@ class BoardController extends Controller
                 'board_id' => $board->id,
                 "trello_id" => $boardList->id,
                 "name" => $boardList->name,
-                'start_date' => new DateTime()->format('Y-m-d'),
+                'start_date' => null,
                 'days' => [],
                 "state" => "disabled"
             ]);
@@ -49,7 +46,7 @@ class BoardController extends Controller
             $board->lists = ListModel::query()->where('board_id', $id)
                 ->orderBy('name', 'asc')
                 ->get(['id', 'name', 'state', 'start_date', 'days']);
-    
+
             $weeks = Utilities::weekDaysSm();
             return view('admin.edit-board', compact('board', 'weeks'));
         }
@@ -57,9 +54,6 @@ class BoardController extends Controller
 
     public function update(ListRequest $request, string $id)
     {
-        // dd($request->all());
-        $request->safe()->all();
-
         ListModel::query()->where('board_id', $id)->update([
             'state' => 'disabled',
         ]);
@@ -68,25 +62,40 @@ class BoardController extends Controller
             'state' => 'active',
         ]);
 
-        if ($request->filled('days')) {
-            $allLists = ListModel::all()->where('board_id', $id)->keyBy('id')->toArray();
+        $allLists = ListModel::query()->where('board_id', $id)->get()->keyBy('id')->toArray();
 
-            foreach ($request->days as $key => $listOp) {
-                if ($allLists[$key]["start_date"] != $listOp["start_date"] || $allLists[$key]["days"] != isset($listOp['weeks']) ?? []) {
-                    ListModel::query()->where('id', $key)->update([
-                        "start_date" => $listOp["start_date"],
-                        "days" => $listOp['weeks'] ?? [],
-                    ]);
+        if (isset($request->weeks)) {
+            $errors = [];
+            foreach ($request->weeks as $key => $listOp) {
+                $success = false;
+                if (!empty($listOp['start_date']) && !empty($listOp['days'])) {
+                    $temp = ucwords(\Carbon\Carbon::parse($listOp['start_date'])->translatedFormat('D'));
+                    if (in_array($temp, $listOp["days"])) {
+                        ListModel::query()->where('id', $key)->update([
+                            "start_date" => $listOp['start_date'],
+                            "days" => $listOp['days'],
+                        ]);
+                        toast()->success($allLists[$key]['name'] . " updated successfully");
+                        $success = true;
+                    } else {
+                        $errors["weeks[{$key}][start_date]"] = "Start date must be on the same week day on {$allLists[$key]['name']}";
+                    }
+                }
+
+                if (isset($errors["weeks[{$key}][start_date]"])) {
+                    toast()->danger($errors["weeks[{$key}][start_date]"]);
+                } else if(!$success){
+                    toast()->warning($allLists[$key]['name'] . " wasn't fully filled out");
                 }
             }
         }
 
-        return redirect()->back()->with('success', 'Board updated successfully');
+        return back()->withInput()->withErrors($errors ?? []);
     }
 
     public function delete(Request $request)
     {
         Board::destroy($request->id);
-        return to_route('admin.index')->with('success', 'Board deleted successfuly');
+        return to_route('admin.index')->with('success', 'Board deleted successfully');
     }
 }

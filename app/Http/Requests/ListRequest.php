@@ -27,10 +27,10 @@ class ListRequest extends FormRequest
     {
         return [
             'days' => ['array'],
-            'days.*' => ['required', 'array'],
-            'days.*.start_date' => ['required', 'date'],
-            'days.*.weeks' => ['array'],
-            'days.*.weeks.*' => ['string', Rule::in(Utilities::weekDaysSm()),],
+            'days.*' => ['required_with:days', 'required', 'array'],
+            'days.*.start_date' => ['required_with:days.*', 'date', 'nullable'],
+            'days.*.days' => ['required_with:days.*', 'array'],
+            'days.*.days.*' => ['required_with:days.*.days', 'string', Rule::in(Utilities::weekDaysSm()),],
         ];
     }
 }

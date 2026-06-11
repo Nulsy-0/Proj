@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
 
+// ! Trello API website -> https://developer.atlassian.com/cloud/trello/rest/
+
 class API extends Model
 {
 
@@ -32,26 +34,7 @@ class API extends Model
 
     protected function getCardsCreatedInList(String $listId)
     {
-        $raw = API::APIFetch("lists/$listId/actions/?filter=createCard");
-        $pos = 0;
-        $filterd = [];
-        $mid = '';
-        $final = [];
-
-        foreach ($raw as $forPos => $card) {
-            if ($forPos != sizeof($raw) - 1 && !property_exists($card->data, 'old') && property_exists($card->data->card,'name')) {
-                $filterd[$pos] = $card->data->card;
-                $pos++;
-            }
-        }
-
-        foreach ($filterd as $forPos => $card) {
-            $cardUrl = '/cards/' . $card->id;
-            $mid .= ($mid == '' ? '' : ',') . $cardUrl;
-        }
-        $final = API::APIFetchBatch($mid);
-
-        return $final;
+        return API::APIAction("lists/$listId/actions", 1000, "createCard");
     }
 
     // Boards --------------------------------------------------
@@ -78,28 +61,55 @@ class API extends Model
     // API -----------------------------------------------------
     private function APIFetch(String $link)
     {
-        $response = Http::get("https://api.trello.com/1/$link", [
-            'key' => config('services.trello.key'),
-            'token' => config('services.trello.token'),
-        ])->throw();
+        $response = json_decode(Http::get(
+            "https://api.trello.com/1/$link",
+            [
+                'key' => config('services.trello.key'),
+                'token' => config('services.trello.token'),
+            ]
+        )->throw()->body());
 
-        return json_decode($response->body());
+        return $response;
     }
 
-    private function APIFetchBatch(String $urls)
+    private function APIAction(String $link, Int $limit, String $action)
     {
-        $response = json_decode(Http::get("https://api.trello.com/1/batch", [
-            'urls' => $urls,
-            'key' => config('services.trello.key'),
-            'token' => config('services.trello.token'),
-        ])->throw()->body());
+        $response = json_decode(Http::get(
+            "https://api.trello.com/1/$link",
+            [
+                'filter' => $action,
+                'limit'  => $limit,
+                'key'    => config('services.trello.key'),
+                'token'  => config('services.trello.token'),
+            ]
+        )->throw()->body());
 
-        $formated = [];
+        return $response;
+    }
 
-        foreach ($response as $key => $value) {
-            $formated[$key] = $value->{'200'};
+    //! Still in development
+    //* API link about batch -> https://developer.atlassian.com/cloud/trello/rest/api-group-batch/#api-batch-get
+    protected function APIBatch(array $links)
+    {
+        $temp = [];
+        $final = [];
+
+        foreach ($links as $key => $link) {
+            array_push($temp, $link);
+            if (count($temp) % 10 == 0 || !isset($links[$key + 1])) {
+                $batch = json_decode(Http::get(
+                    "https://api.trello.com/1/batch",
+                    [
+                        'urls' => collect($temp)->implode(','),
+                        'key' => config('services.trello.key'),
+                        'token' => config('services.trello.token'),
+                    ]
+                )->throw()->body());
+                $final = array_merge($final, $batch);
+                $temp = [];
+            }
         }
 
-        return $formated;
+        return $final;
     }
 }

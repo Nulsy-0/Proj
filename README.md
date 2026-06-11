@@ -76,12 +76,15 @@ The internship focused on gaining hands-on experience in modern web technologies
 ✅ User CRUD
 ✅ Board CRUD
 ✅ Form Password Field eye
-⌛ List CRUD
+✅ List CRUD
+✅ Chats with Chat.js (using CDN, waiting for composer Chat.js comparability with Laravel 13)
+⌛ List Page
 ⌛ Trello API
 
 ## TUDO:
 - Better tables with bootstrap-table
 - Home Page
-- List Page
+- Make the list page custom (the "Statistics" segment is hard coded)
+- Change Board table on the DB to make the list page more custom
 
 ```

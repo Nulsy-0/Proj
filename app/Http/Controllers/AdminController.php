@@ -13,6 +13,9 @@ class AdminController extends Controller
     public function index()
     {
         $users = User::orderBy('created_at', 'desc')->get();
+        foreach ($users as $user) {
+            $user->boards = Board::query()->whereIn('id', $user->boards, 'and', false)->pluck('name');
+        }
 
         $boards = Board::orderBy('created_at', 'desc')->get();
         foreach ($boards as $board) {

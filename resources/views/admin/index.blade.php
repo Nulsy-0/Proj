@@ -12,7 +12,7 @@
         </div>
     </nav>
 
-    <div class="tab-content border-bottom rounded-bottom-4 border-start border-end bg-secondary-subtle p-3 shadow-lg"
+    <div class="tab-content border rounded-bottom-4 border-top-0 bg-secondary-subtle p-3 shadow-lg border-secondary"
         id="nav-tabContent">
         {{-- Users table --}}
         <div class="p-3 pb-0 tab-pane fade show active" id="nav-users" role="tabpanel" aria-labelledby="nav-users-tab"

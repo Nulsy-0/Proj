@@ -24,10 +24,38 @@
                     </span>
                 </p>
                 @if ($user->state != 'admin')
-                    <x-form id="user-delete" method="DELETE" :action="route('user.delete', ['id' => $user->id])">
-                        <input name="id" type="number" value="{{ $user->id }}" hidden readonly>
-                        <button class="btn btn-danger">Delete <i class="bi bi-trash3-fill"></i></button>
-                    </x-form>
+                    <button data-bs-toggle="modal" data-bs-target="#delete-user" class="btn btn-danger">
+                        Delete
+                        <i class="bi bi-trash3-fill"></i>
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="delete-user" data-bs-backdrop="static" data-bs-keyboard="false"
+                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Modael title</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    By pressing 
+                                </div>
+                                <div class="modal-footer d-flex justify-content-between">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+
+                                    <x-form id="user-delete" method="DELETE" :action="route('user.delete', ['id' => $user->id])">
+                                        <input name="id" type="number" value="{{ $user->id }}" hidden
+                                            readonly>
+                                        <button data-bs-toggle="modal" data-bs-target="delete-user"
+                                            class="btn btn-danger">Delete <i class="bi bi-trash3-fill"></i></button>
+                                    </x-form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 @endif
             </div>
         </div>
@@ -59,10 +87,10 @@
                 <x-form.field :old="false" id='password_reset' type='password' label='Reset Password'
                     placeholder='••••••••' autofocus />
 
-                <x-form.field :last="true" id='state' type='select' :options="['user', 'admin', 'disabled']" :value="$user->state" required autofocus />
+                <x-form.field :last="true" id='state' type='select' :options="['user', 'admin', 'disabled']" :value="$user->state"
+                    required autofocus />
             </div>
         </div>
     </x-form>
 
-    <x-debug.errors />
 </x-layout>

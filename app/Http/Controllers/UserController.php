@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AuthRequest;
 use App\Models\Board;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -21,7 +20,6 @@ class UserController extends Controller
 
     public function update(AuthRequest $request, string $id)
     {
-
         if (User::query()->where('id', $id)->exists()) {
             $user = User::findOrFail($id);
             $data = [
@@ -36,9 +34,11 @@ class UserController extends Controller
 
             $user->update($data);
 
-            return back()->with('success', "User updated successfully");
+            toast()->success("User updated successfully");
+            return back();
         }
 
-        return back()->with('warning', "User dosen't exists");
+        toast()->warning("User dosen't exists");
+        return back();
     }
 }

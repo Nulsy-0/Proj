@@ -1,43 +1,59 @@
 @php
-    $notification = null;
-    $message = null;
-
-    if (session('success')) {
-        $notification = 'success';
-        $message = session('success');
-    } elseif (session('warning')) {
-        $notification = 'warning';
-        $message = session('warning');
-    } elseif (session('danger')) {
-        $notification = 'danger';
-        $message = session('danger');
-    }
+    $toasts = session()->pull('toasts', []);
 
     $icons = [
-        'success' => '<i class="bi bi-check-circle-fill"></i>',
-        'warning' => '<i class="bi bi-exclamation-triangle-fill"></i>',
-        'danger' => '<i class="bi bi-x-octagon-fill"></i>'
+        'success' => 'bi-check-circle-fill',
+        'warning' => 'bi-exclamation-triangle-fill',
+        'danger' => 'bi-x-octagon-fill',
+        'info' => 'bi-info-circle-fill',
     ];
 @endphp
 
-@if ($notification)
-    <div id="notification"
-        class="fade position-absolute end-0 bottom-0 mb-3 me-3 alert alert-{{ $notification }} d-flex align-items-center"
-        role="alert">
-        {!! $icons[$notification] !!}
-        <div class="ms-2">
-            {{ $message }}
+<div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastStack">
+    @foreach ($toasts as $toast)
+        <div class="toast align-items-center text-bg-{{ $toast['type'] }} border-0 mb-2" role="alert"
+            data-bs-delay="4000" data-bs-autohide="true">
+
+            <div class="d-flex">
+                <div class="toast-body d-flex align-items-center gap-2">
+                    <i class="bi {{ $icons[$toast['type']] ?? '' }}"></i>
+                    <span>{{ $toast['message'] }}</span>
+                </div>
+
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
         </div>
-    </div>
-    <script>
-        const notification = document.querySelector('#notification');
+    @endforeach
+</div>
 
-        setTimeout(() => {
-            notification.classList.add('show');
-        }, 100);
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.toast').forEach((el, i) => {
+            const toast = new bootstrap.Toast(el, {
+                autohide: false
+            });
+            let timer;
+            const startTimer = () => {
+                timer = setTimeout(() => {
+                    toast.hide();
+                }, 5000);
+            };
 
-        setTimeout(() => {
-            notification.classList.remove('show');
-        }, 3000);
-    </script>
-@endif
+            const stopTimer = () => {
+                clearTimeout(timer);
+            };
+
+            setTimeout(() => {
+                toast.show();
+                startTimer();
+            }, i * 150);
+
+            el.addEventListener('mouseenter', stopTimer);
+            el.addEventListener('mouseleave', startTimer);
+
+            el.addEventListener('hidden.bs.toast', () => {
+                clearTimeout(timer);
+            });
+        });
+    });
+</script>

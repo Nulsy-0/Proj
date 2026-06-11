@@ -17,7 +17,7 @@
             </div>
         </a>
 
-        {{-- Hamburgor btn on mobyle --}}
+        {{-- Hamburger btn on mobile --}}
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -68,17 +68,17 @@
             </ul>
 
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-3">
-                {{-- Ligth/Dark toggle --}}
+                {{-- Light/Dark toggle --}}
                 <li class="nav-item">
                     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                        <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off"
+                        <input type="radio" class="btn-check" name="btn-radio" id="btn-radio2" autocomplete="off"
                             {{ $theme == 'dark' ? 'checked' : '' }}>
-                        <label class="btn btn-outline-info themeBtn" id="dark" for="btnradio2"><i
+                        <label class="btn btn-outline-info themeBtn" id="dark" for="btn-radio2"><i
                                 class="bi bi-moon-stars-fill"></i></label>
 
-                        <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off"
+                        <input type="radio" class="btn-check" name="btn-radio" id="btn-radio3" autocomplete="off"
                             {{ $theme == 'light' ? 'checked' : '' }}>
-                        <label class="btn btn-outline-info themeBtn" id="light" for="btnradio3"><i
+                        <label class="btn btn-outline-info themeBtn" id="light" for="btn-radio3"><i
                                 class="bi bi-brightness-high-fill"></i></label>
                     </div>
                 </li>
