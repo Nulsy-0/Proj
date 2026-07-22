@@ -87,7 +87,6 @@ class API extends Model
         return $response;
     }
 
-    //! Still in development
     //* API link about batch -> https://developer.atlassian.com/cloud/trello/rest/api-group-batch/#api-batch-get
     protected function APIBatch(array $links)
     {

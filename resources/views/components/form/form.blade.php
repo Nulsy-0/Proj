@@ -33,7 +33,7 @@
     {{ $slot }}
     
     @if ($title)    
-        <button class="btn btn-info w-100 mt-3" type="submit">
+        <button class="btn btn-info w-100" type="submit">
             <i class="bi bi-check"></i> {{ $title }}
         </button> 
     @endif

@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\API;
 use App\Models\Board;
 use App\Models\ListModel;
+use App\Models\Utilities;
 use Illuminate\Support\Facades\Http;
+
+use function PHPSTORM_META\map;
+use function PHPUnit\Framework\isArray;
 
 class ListController extends Controller
 {
@@ -17,11 +21,10 @@ class ListController extends Controller
             return back();
         }
         if ($list->days == []) {
-            toast()->danger("The days of th week of $list->name is not set! Ask Admin ;)");
+            toast()->danger("The days of the week of $list->name is not set! Ask Admin ;)");
             return back();
         }
 
-        $trelloList = API::getList($list->trello_id);
         $cards = API::getCardsCreatedInList($list->trello_id);
 
         $cardsInfo = [];
@@ -41,32 +44,19 @@ class ListController extends Controller
 
         // Top left vars (Labels Graph)
         $labelsChart = [];
+        $labelColors = [];
+        $i = 0;
 
         foreach ($trelloBoard->labelNames as $color => $name) {
             if (!empty($name)) {
                 $labelsChart[$name] = 0;
+                array_push($labelColors, $i);;
             }
+            $i++;
         }
 
-        $approved = 0;
-        $delivered = 0;
-        $notDelivered = 0;
-        $notApproved = 0;
         foreach ($cardsInfo as $card) {
             foreach ($card->labels as $label) {
-                if ($label->name == "Aprovado" || $label->name == "Usado") {
-                    $approved++;
-                }
-                if ($label->name == "Passar para o trello do cliente") {
-                    $notDelivered++;
-                }
-                if ($label->name == "aguarda feedbak cliente") {
-                    $delivered++;
-                }
-                if ($label->name == "Alterar") {
-                    $notApproved++;
-                }
-
                 $color = $label->color;
 
                 if (!empty($trelloBoard->labelNames->$color)) {
@@ -100,16 +90,42 @@ class ListController extends Controller
 
         $percent = array_values($percent);
 
+        $pieData ?? [
+            'None' => 0.0001, // Chart.js will render as 0
+        ];
+
+        $percent ?? [
+            'None' => [
+                'sN' => 'None',
+                'fN' => 'None',
+                'count' => 0,
+                'percent' => 100
+            ]
+        ];
+
+        // Bottom vars (Statistics)
+        $statsRaw = $board->stats;
+        $stats = [];
+        foreach ($statsRaw as $key => $stat) {
+            if (is_array($stat) && isset($stat['fields'])) {
+                foreach ($stat['fields'] as $fieldKey => $field) {
+                    $type = $stat['type'];
+                    $fieldType = $stat['fields'][$fieldKey]['type'];
+                    $data = $stat['fields'][$fieldKey]['data'];
+
+                    $stat['fields'][$fieldKey]['data'] = Utilities::statFieldValue($type, $fieldType, $data, $labelsChart, $list);
+                }
+            }
+            $stats[$key] = $stat;
+        }
+
         return view('list.index', compact(
             'list',
-            'trelloBoard',
             'labelsChart',
+            'labelColors',
             'percent',
             'pieData',
-            'approved',
-            'notApproved',
-            'delivered',
-            'notDelivered'
+            'stats'
         ));
     }
 }

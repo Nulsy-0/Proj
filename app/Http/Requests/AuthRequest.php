@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 
 use function Laravel\Prompts\error;
 
@@ -28,15 +29,15 @@ class AuthRequest extends FormRequest
         if ($this->routeIs('login')) {
             return [
                 'name' => ['required', 'string', 'max:255'],
-                'password' => ['required', 'string', 'min:8', 'max:255'],
+                'password' => ['required', 'string', 'max:255', Password::min(8)->mixedCase()->letters()->numbers()->symbols()],
             ];
         }
 
         if ($this->routeIs('register')) {
             return [
                 'name' => ['required', 'string', 'max:255', 'unique:users,name'],
-                'password' => ['required', 'string', 'min:8', 'max:255'],
-                'password_confirmation'=> ['required', 'string', 'min:8', 'max:255', 'same:password'],
+                'password' => ['required', 'string', 'max:255', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+                'password_confirmation'=> ['required', 'same:password'],
                 'state' => ['required', 'string', 'in:"user","admin","disabled"']
             ];
         }
@@ -44,11 +45,10 @@ class AuthRequest extends FormRequest
         if ($this->routeIs('user.update')) {
             return [
                 'name' => ['required', 'string', 'max:255', Rule::unique('users', 'name')->ignore($this->id)],
-                'password_reset' => ['nullable', 'string', 'min:8', 'max:255'],
+                'password_reset' => ['nullable', 'string', 'max:255', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
                 'state' => ['required', 'string', 'in:"user","admin","disabled"'],
+                'boards' => ['nullable', 'array']
             ];
         }
-
-        return [error('Not the rigth route!')];
     }
 }

@@ -24,38 +24,23 @@
                     </span>
                 </p>
                 @if ($user->state != 'admin')
-                    <button data-bs-toggle="modal" data-bs-target="#delete-user" class="btn btn-danger">
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#delete-user-modal"
+                        class="btn btn-danger">
                         Delete
                         <i class="bi bi-trash3-fill"></i>
                     </button>
 
-                    <!-- Modal -->
-                    <div class="modal fade" id="delete-user" data-bs-backdrop="static" data-bs-keyboard="false"
-                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Modael title</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    By pressing 
-                                </div>
-                                <div class="modal-footer d-flex justify-content-between">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Close</button>
-
-                                    <x-form id="user-delete" method="DELETE" :action="route('user.delete', ['id' => $user->id])">
-                                        <input name="id" type="number" value="{{ $user->id }}" hidden
-                                            readonly>
-                                        <button data-bs-toggle="modal" data-bs-target="delete-user"
-                                            class="btn btn-danger">Delete <i class="bi bi-trash3-fill"></i></button>
-                                    </x-form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <x-layout.modal id="delete-user" :btn="false" formId="user-delete" head="Delete User"
+                        :delete="true">
+                        <x-form id="user-delete" method="DELETE" :action="route('user.delete', ['id' => $user->id])">
+                            <input name="id" type="number" value="{{ $user->id }}" hidden readonly>
+                        </x-form>
+                        <p>
+                            By pressing "Delete" this User ( <span
+                                class="text-decoration-underline">{{ $user->name }}</span> ) will no longer exists!
+                        </p>
+                        <b>Are o shore that you want to delete it?</b>
+                    </x-layout.modal>
                 @endif
             </div>
         </div>
@@ -63,32 +48,46 @@
 
     <x-form method="PATCH" id="user-edit" :action="route('user.update', ['id' => $user->id])">
         <div class="row mt-5 gap-5">
-            <div class="col bg-secondary-subtle border p-3 rounded-4 shadow-lg">
+            <div class="col bg-secondary-subtle border border-secondary rounded-4 shadow-lg p-4">
 
-                <h4 class="mb-3">Activated Boards:</h4>
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-check2-square fs-4 me-2"></i>
+                        <h5 class="mb-0 fw-semibold">Active Boards</h5>
+                    </div>
+                </div>
 
-                <div class="d-flex flex-wrap gap-3">
+                <div class="row g-3">
                     @foreach ($boards as $board)
-                        <input type="checkbox" class="btn-check" id="list-{{ $board->id }}" name="boards[]"
-                            value="{{ $board->id }}" @checked(in_array($board->id, $user->boards)) autocomplete="off">
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <input type="checkbox" class="btn-check" id="board-{{ $board->id }}" name="boards[]"
+                                value="{{ $board->id }}" @checked(in_array($board->id, $user->boards)) autocomplete="off">
 
-                        <label class="btn btn-outline-secondary px-4 py-2" for="list-{{ $board->id }}">
-                            {{ $board->name }}
-                        </label>
+                            <label class="btn btn-outline-secondary w-100 rounded-pill py-2"
+                                for="board-{{ $board->id }}">
+                                <i class="bi bi-check2 me-1"></i>
+                                {{ $board->name }}
+                            </label>
+                        </div>
                     @endforeach
                 </div>
+
             </div>
-
-            <div class="col bg-secondary-subtle border p-3 rounded-4 shadow-lg">
+            
+            <div class="col bg-secondary-subtle border border-secondary rounded-4 shadow-lg p-4">
                 <h4 class="mb-3">User Settings:</h4>
+                <div class="text-danger d-flex gap-1">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <p>Leave "Reset Password" empty to maintain the same password</p>
+                </div>
 
-                <x-form.field id='name' placeholder='Your Name' required autofocus :value="$user->name" />
+                <x-form.field id='name' placeholder='Your Name' required :value="$user->name" autocomplete="off" />
 
                 <x-form.field :old="false" id='password_reset' type='password' label='Reset Password'
-                    placeholder='••••••••' autofocus />
+                    autocomplete="off" />
 
                 <x-form.field :last="true" id='state' type='select' :options="['user', 'admin', 'disabled']" :value="$user->state"
-                    required autofocus />
+                    required autocomplete="off" />
             </div>
         </div>
     </x-form>

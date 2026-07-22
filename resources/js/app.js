@@ -36,5 +36,3 @@ themeBtns.forEach(btn => {
 
 
 
-
-

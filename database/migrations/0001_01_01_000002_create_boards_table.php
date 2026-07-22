@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('trello_id')->unique();
             $table->string('link')->unique();
+            $table->json('stats');
             $table->timestamps();
         });
     }

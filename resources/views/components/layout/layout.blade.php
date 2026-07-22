@@ -12,10 +12,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="icon" type="image/webp" href="{{ $logo }}" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"></script>
-    
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <title>{{ $title }}</title>
@@ -37,11 +39,13 @@
         </div>
     </main>
 
-    <x-layout.nutification />
+    <x-layout.notification />
 
     <footer>
         <x-layout.footer />
     </footer>
+
+    @include('popper::assets')
 </body>
 
 </html>

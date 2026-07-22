@@ -24,36 +24,36 @@
             </div>
         </div>
     @endforeach
-</div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.toast').forEach((el, i) => {
-            const toast = new bootstrap.Toast(el, {
-                autohide: false
-            });
-            let timer;
-            const startTimer = () => {
-                timer = setTimeout(() => {
-                    toast.hide();
-                }, 5000);
-            };
-
-            const stopTimer = () => {
-                clearTimeout(timer);
-            };
-
-            setTimeout(() => {
-                toast.show();
-                startTimer();
-            }, i * 150);
-
-            el.addEventListener('mouseenter', stopTimer);
-            el.addEventListener('mouseleave', startTimer);
-
-            el.addEventListener('hidden.bs.toast', () => {
-                clearTimeout(timer);
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.toast').forEach((el, i) => {
+                const toast = new bootstrap.Toast(el, {
+                    autohide: false
+                });
+                let timer;
+                const startTimer = () => {
+                    timer = setTimeout(() => {
+                        toast.hide();
+                    }, 5000);
+                };
+    
+                const stopTimer = () => {
+                    clearTimeout(timer);
+                };
+    
+                setTimeout(() => {
+                    toast.show();
+                    startTimer();
+                }, i * 150);
+    
+                el.addEventListener('mouseenter', stopTimer);
+                el.addEventListener('mouseleave', startTimer);
+    
+                el.addEventListener('hidden.bs.toast', () => {
+                    clearTimeout(timer);
+                });
             });
         });
-    });
-</script>
+    </script>
+</div>

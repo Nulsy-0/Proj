@@ -20,6 +20,6 @@ class adminMiddleware
         if(Auth::check() && Auth::user()->state === 'admin') {
             return $next($request);
         }
-        return back();
+        return abort(404);;
     }
 }

@@ -12,7 +12,7 @@ class UserController extends Controller
     {
         if (User::query()->where("id", $id)->exists()) {
             $user = User::findOrFail($id);
-            $boards = Board::all();
+            $boards = Board::get(['id', 'name']);
             return view('admin.edit-user', compact('user', 'boards'));
         }
         return back();
@@ -21,24 +21,37 @@ class UserController extends Controller
     public function update(AuthRequest $request, string $id)
     {
         if (User::query()->where('id', $id)->exists()) {
+
             $user = User::findOrFail($id);
+
             $data = [
                 'name' => $request->name,
                 'state' => $request->state,
-                'boards' => $request->boards
+                'boards' => $request->boards ?? [],
             ];
 
-            if ($request->password_reset != null) {
+            if ($request->password_reset) {
                 $data['password'] = bcrypt($request->password_reset);
             }
 
-            $user->update($data);
+            $user->fill($data);
 
-            toast()->success("User updated successfully");
+            if ($user->isDirty()) {
+                $user->save();
+                toast()->success("User updated successfully");
+            }
+
             return back();
         }
 
-        toast()->warning("User dosen't exists");
+        toast()->warning("User doesn't exists");
         return back();
+    }
+
+    public function delete(string $id)
+    {
+        User::destroy($id);
+        toast()->success('User deleted successfully');
+        return to_route('admin.index');
     }
 }

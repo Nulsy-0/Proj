@@ -14,17 +14,18 @@ class AuthController extends Controller
         $user = $request->safe()->all();
 
         if (!Auth::attempt($user) || Auth::user()->state == "disabled") {
-            Auth::logout();    
+            Auth::logout();
 
             return back()
                 ->withErrors([
-                    'password' => "The credencials aren't rigth!",
+                    'password' => "The credentials aren't right!",
                 ])->withInput(request()->all());
         }
 
         $request->session()->regenerate();
 
-        return to_route('home')->with('success', 'Welcome back!');
+        toast()->success('Welcome back!');
+        return to_route('home');
     }
 
     public function loginView()
@@ -41,14 +42,20 @@ class AuthController extends Controller
         return to_route('loginView');
     }
 
-    public function registerView(Request $request)
+    public function registerView()
     {
-        return view('auth.register');
+        if (!User::query()->where('state', 'admin')->exists()) {
+            return view('auth.register');
+        }
+
+        return view('errors.404');
     }
 
     public function register(User $user, AuthRequest $request)
     {
-        $request->session()->regenerate();
+        if (!User::query()->where('state', 'admin')->exists()) {
+            $request->session()->regenerate();
+        }
 
         $user = User::create([
             'name' => $request->name,
@@ -57,11 +64,13 @@ class AuthController extends Controller
             'boards' => [],
         ]);
 
-        if(!Auth::user() || Auth::user()->settings->type == "disabled") {
+        if (!Auth::user() && $user->state != "disabled") {
             Auth::login($user);
-            return redirect()->intended('/')->with('success', 'The first time :)');
+            toast()->success('The first time :)');
+            return to_route('home');
         }
     
-        return to_route('admin.index')->with('success','User created!');
+        toast()->success('User created!');
+        return to_route('admin.index');
     }
 }

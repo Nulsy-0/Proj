@@ -18,7 +18,7 @@
         <div class="p-3 pb-0 tab-pane fade show active" id="nav-users" role="tabpanel" aria-labelledby="nav-users-tab"
             tabindex="0">
 
-            <x-layout.modal add='user' formId="user">
+            <x-layout.modal id='user' btnText="Add User" head="Create User" formId="user">
                 <x-form :action="route('register')" method="POST" id="user">
                     @csrf
                     <x-form.field id='name' placeholder='Your Name' required autofocus autocomplete />
@@ -41,7 +41,7 @@
         <div class="p-3 pb-0 tab-pane fade" id="nav-boards" role="tabpanel" aria-labelledby="nav-boards-tab"
             tabindex="0">
 
-            <x-layout.modal add='board' formId="board">
+            <x-layout.modal id='board' btnText="Add Board" head="Add Board" formId="board">
                 <x-form :action="route('board.create')" method="POST" id="board">
                     @csrf
                     <x-form.field :last="true" id='link' placeholder='Board Link' required autofocus autocomplete />

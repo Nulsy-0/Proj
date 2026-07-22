@@ -6,6 +6,7 @@ use App\Http\Controllers\BoardController;
 use App\Http\Controllers\ListController;
 use App\Http\Controllers\TestsController;
 use App\Http\Controllers\UserController;
+use App\Models\Utilities;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['guest'])->group(function () {
@@ -13,7 +14,6 @@ Route::middleware(['guest'])->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
 });
 
-Route::get('/tests', [TestsController::class, 'test'])->name('test');
 Route::get('/register', [AuthController::class, 'registerView'])->name('registerView');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 
@@ -32,12 +32,19 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/admin/update/board/{id}', [BoardController::class, 'update'])->name('board.update');
         Route::delete('/admin/delete/board/{id}', [BoardController::class, 'delete'])->name('board.delete');
         Route::post('/admin/create/board', [BoardController::class, 'create'])->name('board.create');
+        Route::patch('/admin/refresh/board/{id}', [BoardController::class, 'refresh'])->name('board.refresh');
 
         // User
         Route::get('/admin/edit/user/{id}', [UserController::class, 'edit'])->name('user.edit');
         Route::patch('/admin/update/user/{id}', [UserController::class, 'update'])->name('user.update');
         Route::delete('/admin/delete/user/{id}', [UserController::class, 'delete'])->name('user.delete');
         Route::post('/admin/create/user', [AuthController::class, 'register'])->name('register');
+
+        // * Get a component tro js 
+        Route::post('/utilities/getView', [Utilities::class, 'getview'])->name('getview');
+
+        // For tests    
+        Route::get('/tests', [TestsController::class, 'test'])->name('test');
     });
 
     Route::get('/list/{id}', [ListController::class, 'index'])->name('list.index');

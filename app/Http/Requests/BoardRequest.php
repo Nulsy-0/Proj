@@ -6,8 +6,6 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 
-use function PHPUnit\Framework\stringContains;
-
 class BoardRequest extends FormRequest
 {
     /**

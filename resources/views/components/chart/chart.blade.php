@@ -1,4 +1,4 @@
-@props(['type', 'name', 'data', 'orientation' => 'x', 'color'])
+@props(['type', 'name', 'data', 'orientation' => 'x', 'colors'])
 
 <div class="w-100">
     <canvas style=" max-width: 100%;" id="{{ $name }}-chart" {{ $attributes }}></canvas>
@@ -7,52 +7,77 @@
 {{-- Default colors and animations --}}
 @php
     $defaultBgColors = [
-        'rgba(255, 99, 132, 0.5)',
-        'rgba(255, 159, 64, 0.5)',
-        'rgba(255, 205, 86, 0.5)',
-        'rgba(75, 192, 192, 0.5)',
-        'rgba(54, 162, 235, 0.5)',
-        'rgba(153, 102, 255, 0.5)',
-        'rgba(201, 203, 207, 0.5)',
-        'rgba(40, 167, 69, 0.5)',
-        'rgba(220, 53, 69, 0.5)',
-        'rgba(255, 20, 147, 0.5)',
-        'rgba(0, 206, 209, 0.5)',
-        'rgba(255, 140, 0, 0.5)',
-        'rgba(106, 90, 205, 0.5)',
-        'rgba(50, 205, 50, 0.5)',
-        'rgba(128, 0, 128, 0.5)',
-        'rgba(255, 69, 0, 0.5)',
-        'rgba(0, 128, 128, 0.5)',
-        'rgba(184, 134, 11, 0.5)',
-        'rgba(70, 130, 180, 0.5)',
-        'rgba(123, 104, 238, 0.5)',
-    ];
-    $defaultBorderColors = [
-        'rgb(255, 99, 132)',
-        'rgb(255, 159, 64)',
-        'rgb(255, 205, 86)',
-        'rgb(75, 192, 192)',
-        'rgb(54, 162, 235)',
-        'rgb(153, 102, 255)',
-        'rgb(201, 203, 207)',
-        'rgb(40, 167, 69)',
-        'rgb(220, 53, 69)',
-        'rgb(255, 20, 147)',
-        'rgb(0, 206, 209)',
-        'rgb(255, 140, 0)',
-        'rgb(106, 90, 205)',
-        'rgb(50, 205, 50)',
-        'rgb(128, 0, 128)',
-        'rgb(255, 69, 0)',
-        'rgb(0, 128, 128)',
-        'rgb(184, 134, 11)',
-        'rgb(70, 130, 180)',
-        'rgb(123, 104, 238)',
+        'rgba(33, 110, 78, 0.5)',
+        'rgba(127, 95, 1, 0.5)',
+        'rgba(158, 76, 0, 0.5)',
+        'rgba(174, 46, 36, 0.5)',
+        'rgba(128, 63, 165, 0.5)',
+        'rgba(21, 88, 188, 0.5)',
+        'rgba(32, 106, 131, 0.5)',
+        'rgba(76, 107, 31, 0.5)',
+        'rgba(148, 61, 115, 0.5)',
+        'rgba(99, 102, 107, 0.5)',
+
+        'rgba(75, 206, 151, 0.5)',
+        'rgba(221, 179, 14, 0.5)',
+        'rgba(252, 167, 0, 0.5)',
+        'rgba(248, 113, 104, 0.5)',
+        'rgba(201, 124, 244, 0.5)',
+        'rgba(102, 157, 241, 0.5)',
+        'rgba(108, 195, 224, 0.5)',
+        'rgba(148, 199, 72, 0.5)',
+        'rgba(231, 116, 187, 0.5)',
+        'rgba(150, 153, 158, 0.5)',
+
+        'rgba(22, 75, 53, 0.5)',
+        'rgba(83, 63, 4, 0.5)',
+        'rgba(105, 50, 0, 0.5)',
+        'rgba(93, 31, 26, 0.5)',
+        'rgba(72, 36, 93, 0.5)',
+        'rgba(18, 50, 99, 0.5)',
+        'rgba(22, 69, 85, 0.5)',
+        'rgba(55, 71, 31, 0.5)',
+        'rgba(80, 37, 63, 0.5)',
+        'rgba(75, 77, 81, 0.5)',
     ];
 
-    $bgColors = array_values($color['bg'] ?? $defaultBgColors);
-    $bdColors = array_values($color['bd'] ?? $defaultBorderColors);
+    $defaultBdColors = [
+        'rgb(33, 110, 78)',
+        'rgb(127, 95, 1)',
+        'rgb(158, 76, 0)',
+        'rgb(174, 46, 36)',
+        'rgb(128, 63, 165)',
+        'rgb(21, 88, 188)',
+        'rgb(32, 106, 131)',
+        'rgb(76, 107, 31)',
+        'rgb(148, 61, 115)',
+        'rgb(99, 102, 107)',
+
+        'rgb(75, 206, 151)',
+        'rgb(221, 179, 14)',
+        'rgb(252, 167, 0)',
+        'rgb(248, 113, 104)',
+        'rgb(201, 124, 244)',
+        'rgb(102, 157, 241)',
+        'rgb(108, 195, 224)',
+        'rgb(148, 199, 72)',
+        'rgb(231, 116, 187)',
+        'rgb(150, 153, 158)',
+
+        'rgb(22, 75, 53)',
+        'rgb(83, 63, 4)',
+        'rgb(105, 50, 0)',
+        'rgb(93, 31, 26)',
+        'rgb(72, 36, 93)',
+        'rgb(18, 50, 99)',
+        'rgb(22, 69, 85)',
+        'rgb(55, 71, 31)',
+        'rgb(80, 37, 63)',
+        'rgb(75, 77, 81)',
+    ];
+
+    $bgColors = isset($colors) ? array_map(fn($index) => $defaultBgColors[$index], $colors) : $defaultBgColors;
+    $bdColors = isset($colors) ? array_map(fn($index) => $defaultBdColors[$index], $colors) : $defaultBdColors;
 
     switch ($type) {
         case 'pie':
@@ -93,7 +118,7 @@
         options: {
             animation: {
                 duration: 1000,
-                delay: 1500,
+                delay: 100,
                 easing: 'easeInOutQuart',
             },
             animations: @json($animations),
